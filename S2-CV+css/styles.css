@@ -1,0 +1,71 @@
+#imagine-fundal{ 
+    background-image: url(background.image.jfif);
+    height: 100%;
+      }
+
+img{ border-radius: 40%;
+    float: left;
+}
+
+#contact.container{
+    padding: 14px;
+
+}
+
+.span1{
+    margin-right: 5px;
+    color:black;
+    float: left;
+    /* padding: 10px; */
+} 
+
+#stil-nume{ 
+    border-style: dotted;
+    color: brown;
+}
+
+h2{
+    border-style: double;
+    text-align: center;
+}
+h4{
+    font-style: italic;
+}
+p{
+    text-decoration: underline;
+}
+
+.wavy-underline{
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+}
+
+.container1{
+    text-align: center;
+    border-bottom: 2px solid blue;
+    
+}
+
+.big-container{
+    display:flex
+}
+
+    
+.left-section{
+     width: 30%; 
+     border-right: 2px solid blue;
+     padding:30px ;
+}
+
+.right-section{
+    width: 70%;
+    padding:30px
+}
+
+h2 {
+    color:blueviolet;
+}
+
+h4{
+    color:darkblue;
+}
