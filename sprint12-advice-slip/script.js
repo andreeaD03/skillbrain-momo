@@ -1,16 +1,28 @@
-const button = document.getElementById("button");
-async function adviceGiver() {
-    const url = "https://api.adviceslip.com/advice"
+const adviceIdElement = document.getElementById("advice-id");
+const adviceTextElement = document.getElementById("advice-text");
+const diceButton = document.getElementById("dice-button");
+
+const updateAdviceText = (text) => adviceTextElement.textContent = text;
+const updateAdviceId = (id) => adviceIdElement.textContent = "ADVICE #" + id;
+
+async function fetchAdvice() {
+    const apiEndpoint = "https://api.adviceslip.com/advice";
+    let adviceText = '';
+    let adviceId = '';
 
     try {
-        const response = await fetch(url)
-        const data = await response.json()
+        const response = await fetch(apiEndpoint);
+        const adviceData = await response.json();
 
-        console.log(data);
+        adviceText = `"${adviceData.slip.advice}"`;
+        adviceId = adviceData.slip.id;
+    } 
+    catch (error) {
+        console.error(error);
     }
-    catch (e) {
-        console.error("eroare la obtinerea datelor")
-    }
+
+    updateAdviceText(adviceText);
+    updateAdviceId(adviceId);
 }
 
-button.addEventListener('click', adviceGiver)
+diceButton.addEventListener('click', fetchAdvice);
