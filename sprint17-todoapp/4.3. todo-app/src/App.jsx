@@ -5,70 +5,138 @@ import TodoItem from "./components/todo-item/TodoItem";
 import TextArea from "./components/input/TextArea";
 import Button from "./components/button/Button";
 import "./App.css";
+import { useState } from "react";
+import Modal from "./components/modal/Modal";
 
 const TODOS_MOCK = [
   {
     id: "1",
     title: "Todo 1",
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. At id illo repellendus non maiores in pariatur aliquam iure fugit amet!",
+      "Sa iau micul dejun dimineata",
     completed: false,
   },
   {
     id: "2",
     title: "Todo 2",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit!",
+    description: "De facut tema la React",
     completed: false,
   },
   {
     id: "3",
     title: "Todo 3",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit!",
+    description: "Sa citesc o carte",
     completed: true,
   },
   {
     id: "4",
     title: "Todo 4",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit!",
+    description: "Lorem ipsum dolor sit ",
+    completed: false,
+  },
+  {
+    id: "5",
+    title: "Todo 5",
+    description: "consectetur adipisicing elit!",
     completed: true,
   },
 ];
 
 function App() {
+  const [todos, setTodos] = useState(TODOS_MOCK);
+
+  const uncompletedTodos = todos.filter((todo) => !todo.completed);
+
+  const onCreateTodoItemFn = todo =>
+    <TodoItem key={todo.id} todo={todo} onDeleteTodo={() => onDeleteTodo(todo.id)} />
+
+  const uncompletedTodosTags = uncompletedTodos.map(onCreateTodoItemFn);
+  const completedTodos = todos.filter((todo) => todo.completed);
+  const completedTodosTags = completedTodos.map(onCreateTodoItemFn);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTodo, setNewTodo] = useState({title: "", description: ""});
+
+  const handleAddTodo = () => {
+    if (newTodo.title.trim() !== "") {
+      setTodos((oldTodos) => [
+        ...oldTodos,
+        {
+          id: (Math.max(0, ...oldTodos.map(todo => parseInt(todo.id))) + 1).toString(),
+          title: newTodo.title,
+          description: newTodo.description,
+          completed: false,
+        },
+      ]);
+      setNewTodo({ title: "", description: ""});
+      setIsModalOpen(false);
+    }
+  };
+
+  const openModal = () =>{
+    setIsModalOpen(true);
+  };
+  const closeModal = () =>{
+    setIsModalOpen(false);
+  };
+
+  const handleInputChange = (event) => {
+    const {name, value} = event.target;
+    setNewTodo((prevState) => (
+      {
+        ...prevState,
+        [name]: value
+      }
+    ));
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleAddTodo();
+  }
+  
+  const onDeleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+
+  };
+  
+
+
   return (
     <div className="App">
       <div className="app-container">
-        {/* 
-            This is your Create Card component.
-          */}
-        <Card>
-          <h2>Create Todo</h2>
-          <form>
-            <Input onChange={() => {}} placeholder="Title" type="text" />
-            <TextArea onChange={() => {}} placeholder="Description" />
-            <Button type="submit">Create</Button>
-          </form>
-        </Card>
-
+  
         {/* 
           My Todos
         */}
         <Card>
           <h1>My todos</h1>
-          <Button onClick={() => console.log("Open Modal")}>Add +</Button>
+          <Button onClick={openModal}>Add +</Button>
           <div className="list-container">
-            <TodoItem completed={false} />
-            <TodoItem completed={false} />
+          {uncompletedTodosTags}; 
           </div>
 
           <div className="separator"></div>
 
           <h2>Completed</h2>
           <div className="list-container">
-            <TodoItem completed={true} />
-            <TodoItem completed={true} />
+           {completedTodosTags}
           </div>
         </Card>
+    
+     {/* 
+            This is your Create Card component.
+          */}
+     
+        <Modal isOpen={isModalOpen} onClose={closeModal} >
+          <Card>
+            <h2>Create Todo</h2>
+            <form onSubmit={handleSubmit}>
+              <Input onChange={handleInputChange} placeholder="Title" type="text" name="title" value={newTodo.title} required/>
+              <TextArea onChange={handleInputChange} placeholder="Description" name="description" value={newTodo.description} />
+              <Button type="submit">Create</Button>
+            </form>
+          </Card>
+        </Modal>
       </div>
     </div>
   );
